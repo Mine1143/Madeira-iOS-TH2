@@ -316,6 +316,14 @@ workflows:
           cmake --build toolchains/llvm-ios-build
           ls toolchains/llvm-ios-build/lib/*.a | head
 
+      - name: Patch dxmt-ios build for MRC Objective-C
+        script: |
+          set -euxo pipefail
+          # winemetal_unix.c & cache.m use MRC (manual retain/release) — disable ARC
+          sed -i '' 's/xcrun -sdk iphoneos clang $COMMON_FLAGS -x objective-c/xcrun -sdk iphoneos clang $COMMON_FLAGS -fno-objc-arc -x objective-c/' \
+            build/dxmt-ios/build.sh
+          grep -n "fno-objc-arc" build/dxmt-ios/build.sh
+
       # ---------------- DXMT ----------------
       - name: Generate airconv shader headers
         script: |
