@@ -1,16 +1,16 @@
-# Codemagic build config for Madeira — Windows PC games on iOS
+# Codemagic build config for Madeira ? Windows PC games on iOS
 # (FEX-Emu + Wine + DXMT). Produces an UNSIGNED Madeira.ipa that any
 # sideloader (SideStore / LiveContainer / AltStore / Scarlet) can sign
 # and install. JIT is required at runtime; the app embeds the
 # get-task-allow entitlement expectations and works with StikDebug.
 #
-# Free tier: 500 min/month on Mac mini M2 — this build takes ~60-90 min
+# Free tier: 500 min/month on Mac mini M2 ? this build takes ~60-90 min
 # the first time.
 
 workflows:
   madeira-ipa:
     name: Madeira IPA
-    max_build_duration: 180
+    max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
       xcode: latest
