@@ -35,12 +35,11 @@ workflows:
         script: |
           set -euxo pipefail
           git submodule update --init --recursive
-          # Windows checkouts lose the exec bit on every .sh — restore it
-          find build scripts tools research/dxmt -name '*.sh' -exec chmod +x {} + 2>/dev/null || true
-          chmod +x build/dxmt-ios/build.sh build/ntdll-unix/build.sh \
-                 build/win32u-unix/build.sh build/wineserver/build.sh \
-                 build/gnutls-ios/build.sh build/freetype-ios/build.sh \
-                 build/crypto-unix/gen_gnutls_symtab.sh 2>/dev/null || true
+          # Windows checkouts lose the exec bit AND carry CRLF line endings
+          # that break bash parsing — normalize every .sh before building.
+          find build scripts tools research -name '*.sh' -type f -print0 |
+            xargs -0 -n1 bash -c 'f="$0"; tr -d "\r" < "$f" > "$f.lf" && mv "$f.lf" "$f"'
+          find build scripts tools research -name '*.sh' -exec chmod +x {} + 2>/dev/null || true
 
       - name: MSVC runtime DLLs
         script: |
